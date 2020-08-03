@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kube-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+#  hostPath:
+#    path: "/mnt/test"
+  nfs:
+    path: /mnt/NAS2_RAID5/kubernetes/kubernetes
+    server: 192.168.0.203

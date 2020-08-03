@@ -1,0 +1,11 @@
+1. helm install stable/nfs-client-provisioner --set nfs.server=x.x.x.x --set nfs.path=/exported/path
+
+guide = https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client
+
+2. kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
+Make the new storage class as default, otherwise prometheus pvc will stay in pending status, or edit values files to set your desired storage class
+
+3. helm install stable/prometheus --name prometheus --values prometheus.values  --namespace prometheus
+
+4. To delete -> helm del --purge prometheus 

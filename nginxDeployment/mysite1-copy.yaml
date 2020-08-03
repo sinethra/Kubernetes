@@ -1,0 +1,76 @@
+#Create Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mysite1
+  name: mysite1
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: mysite1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mysite1
+    spec:
+      volumes:
+      - name: mysite1-storage
+        persistentVolumeClaim:
+            claimName: kube-pvc
+      - name: varlog
+        emptyDir: {}
+      containers:
+      - image: nginx
+        name: nginx
+        volumeMounts:
+            - name: mysite1-storage
+              subPath: nginx/app1
+              mountPath: /usr/share/nginx/html
+            - name: varlog
+              mountPath: /var/log/nginx
+      - name: count-access
+        image: busybox
+        args: [/bin/sh, -c, 'tail -n+1 -f /var/log/access.log']
+        volumeMounts:
+            - name: varlog
+              mountPath: /var/log
+      - name: count-error
+        image: busybox
+        args: [/bin/sh, -c, 'tail -n+1 -f /var/log/error.log']
+        volumeMounts:
+            - name: varlog
+              mountPath: /var/log
+        resources: {}
+status: {}
+---
+#Create ClusterIP Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysite1-service
+spec:
+  selector:
+    app: mysite1
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+---
+#Create NodePort Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysite1-service-np
+spec:
+  type: NodePort
+  selector:
+    app: mysite1
+  ports:
+    - port: 8080
+      targetPort: 80
+      #nodePort: 30007

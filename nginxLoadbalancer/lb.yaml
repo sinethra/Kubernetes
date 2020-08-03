@@ -1,0 +1,47 @@
+#Create Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx-lb
+  name: nginx-lb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-lb
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx-lb
+    spec:
+      volumes:
+      - name: nginx-lb-storage
+        persistentVolumeClaim:
+            claimName: kube-pvc 
+      containers:
+      - image: nginx
+        name: nginx
+        volumeMounts:
+            - name: nginx-lb-storage
+              subPath: nginxlb
+              mountPath: /etc/nginx
+        resources: {}
+status: {}
+---
+#Create NodePort Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginxlb-service-np
+spec:
+  type: NodePort
+  selector:
+    app: mysite1
+  ports:
+    - port: 80
+      targetPort: 80
+      #nodePort: 30007

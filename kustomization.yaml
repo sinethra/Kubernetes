@@ -1,0 +1,3 @@
+resources:
+  - create-pv.yaml
+  - create-pvc.yaml

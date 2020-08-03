@@ -1,0 +1,47 @@
+#Create Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: wp1
+  name: wp1
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: wp1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: wp1
+    spec:
+      volumes:
+      - name: wp1-storage
+        persistentVolumeClaim:
+            claimName: kube-pvc 
+      containers:
+      - image: wordpress
+        name: wordpress
+        volumeMounts:
+            - name: wp1-storage
+              subPath: wordpress/wp1
+              mountPath: /var/www/html
+        resources: {}
+status: {}
+---
+#Create NodePort Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: wp1-service-np
+spec:
+  type: NodePort
+  selector:
+    app: wp1
+  ports:
+    - port: 80
+      targetPort: 80
+      #nodePort: 30007
