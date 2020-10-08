@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wordpress-configmap
+data:
+  wordpress.db.host: 192.168.0.254:3306
+  wordpress.db.name: kube_wp_eme
+  wordpress.config.extra: |
+    define('WP_ALLOW_MULTISITE', true);

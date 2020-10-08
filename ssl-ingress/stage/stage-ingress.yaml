@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+     cert-manager.io/cluster-issuer: letsencrypt-staging
+  name: myingress-sinethra
+ #namespace: default
+spec:
+  rules:
+  - host: sinethra.kube.eme-devops.com
+    http:
+      paths:
+      - backend:
+          serviceName: nginx
+          servicePort: 80
+        path: /
+  tls:
+  - hosts:
+    - sinethra.kube.eme-devops.com
+    secretName: sinethra.kube.eme-devops.com

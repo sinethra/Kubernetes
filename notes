@@ -1,0 +1,5 @@
+1. To to check whether a ServiceAccount has permission to create a resource inside the namespace;
+
+kubectl auth can-i create configmap --as=system:serviceaccount:gitlab-managed-apps:ingress-nginx-ingress -n gitlab-managed-apps
+
+"system:serviceaccount:namespace_the_SA_belongs_to:SA" -n NameSpace_To_check_Permission

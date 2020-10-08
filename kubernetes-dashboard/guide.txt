@@ -1,0 +1,9 @@
+1. kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+
+2. kubectl expose deployment kubernetes-dashboard --type=NodePort --name=kube-dashbaord-nodeport -n kubernetes-dashboard
+
+3. kubectl apply -f kube-dashboard-admin-account.yaml 
+
+4. kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep kube-dashboard-admin | awk '{print $1}')
+
+Login to the kubedasboard from the nodeport with the token from the last command

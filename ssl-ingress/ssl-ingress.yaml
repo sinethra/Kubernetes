@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kube.eme-devops.com-ssl-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"    
+    cert-manager.io/cluster-issuer: "letsencrypt-clusterissuer-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+
+spec:
+  tls:
+  - hosts:
+    - sinethra.kube.eme-devops.com
+    - httpd.kube.eme-devops.com
+    - wpmulti.kube.eme-devops.com
+    secretName: kube.eme-devops.com
+  rules:
+  - host: sinethra.kube.eme-devops.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx
+          servicePort: 80
+  - host: httpd.kube.eme-devops.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx
+          servicePort: 80
+  - host: wpmulti.kube.eme-devops.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: wordpress-multisite
+          servicePort: 80

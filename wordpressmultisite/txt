@@ -1,0 +1,1 @@
+kubectl create secret generic wordpress-secret --from-literal=wordpress.db.user="root" --from-literal=wordpress.db.password='ememy'

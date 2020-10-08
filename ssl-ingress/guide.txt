@@ -1,0 +1,84 @@
+1. Deploy ingress controller if not deployed
+
+https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-manifests/#prerequisites
+
+git clone https://github.com/nginxinc/kubernetes-ingress/
+cd kubernetes-ingress/deployments
+git checkout v1.8.1
+
+kubectl apply -f common/ns-and-sa.yaml
+kubectl apply -f rbac/rbac.yaml
+kubectl apply -f rbac/ap-rbac.yaml
+kubectl apply -f common/default-server-secret.yaml
+kubectl apply -f common/nginx-config.yaml
+kubectl apply -f daemon-set/nginx-ingress.yaml
+
+2. Deploy Cert-manager 
+
+https://cert-manager.io/docs/installation/kubernetes/
+
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.16.1/cert-manager.yaml
+
+3. Create clusterissuer manifest and deploy
+vim clusterIssuer-Production.yaml
+
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-clusterissuer-production
+spec:
+  acme:
+    email: sinethra@emarketingeye.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-clusterissuer-production
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+
+kubectl apply -f clusterIssuer-Production.yaml and wait for the state of the clusterissuer become true
+
+4. create deployment and expose
+
+5. After pointing the domain create ssl ingress resource.
+
+vim ssl-ingress.yaml
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kube.eme-devops.com-ssl-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-clusterissuer-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+
+spec:
+  tls:
+  - hosts:
+    - sinethra.kube.eme-devops.com
+    - httpd.kube.eme-devops.com
+    secretName: kube.eme-devops.com
+  rules:
+  - host: sinethra.kube.eme-devops.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx
+          servicePort: 80
+  - host: httpd.kube.eme-devops.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx
+          servicePort: 80
+
+6. Check 
+
+kubectle get ingress & kubectle describe ingress
+kubectl get certificate should be true if issued correctly
+

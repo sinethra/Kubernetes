@@ -7,12 +7,12 @@ metadata:
 spec:
   storageClassName: manual
   capacity:
-    storage: 2Gi
+    storage: 20Gi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
 #  hostPath:
 #    path: "/mnt/test"
   nfs:
-    path: /mnt/NAS2_RAID5/kubernetes/kubernetes
+    path: /mnt/NAS2_RAID5/kubernetes
     server: 192.168.0.203

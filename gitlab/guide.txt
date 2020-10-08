@@ -1,0 +1,11 @@
+1. Gitlab should be installed in a fresh kubernetes cluster
+
+kubectl cluster-info | grep 'Kubernetes master' | awk '/http/ {print $NF}'
+kubectl get secret
+kubectl get secret default-token-5vmw5 -o jsonpath="{['data']['ca\.crt']}" | base64 --decode
+kubectl -n kube-system get secret | grep gitlab-admin | awk '{print $1}'
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep gitlab-admin | awk '{print $1}')
+
+2. Before deploying ingress application from gitlab in a baremetal kubernetes cluster, MetalLB should be deployed. This will help ingress to get loadbalancer ip
+
+3. Before deploying prometheus, a default pvc issuer should be there like a nfs client provisioner

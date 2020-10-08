@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: httpd
+  name: httpd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpd
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: httpd
+    spec:
+      volumes:
+      - name: httpd-storage
+        persistentVolumeClaim:
+            claimName: kube-pvc
+      containers:
+      - image: httpd
+        name: httpd
+        volumeMounts:
+            - name: httpd-storage
+              subPath: httpd
+              mountPath: /var/www/html
+        resources: {}
+status: {}

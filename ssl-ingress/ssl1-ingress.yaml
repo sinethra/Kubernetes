@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kube.emarketingeye.dev-ssl-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-clusterissuer-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+
+spec:
+  tls:
+  - hosts:
+    - sinethra.kube.emarketingeye.dev
+    secretName: kube.emarketingeye.dev
+  rules:
+  - host: sinethra.kube.emarketingeye.dev
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx
+          servicePort: 80

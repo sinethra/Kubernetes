@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+  name: kube.eme-devops.com
+  #namespace: default
+spec:
+  rules:
+  - host: kube.eme-devops.com
+    http:
+      paths:
+      - backend:
+          serviceName: wp1
+          servicePort: 80
+        path: /
+  tls:
+  - hosts:
+    - kube.eme-devops.com
+    secretName: letsencrypt-staging

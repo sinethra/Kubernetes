@@ -1,0 +1,4 @@
+install helm 3
+helm install nfs-provisioner --set nfs.server=192.168.0.203 --set nfs.path=/mnt/NAS2_RAID5/kubernetes stable/nfs-client-provisioner
+kubectl patch storageclass nfs-client -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
