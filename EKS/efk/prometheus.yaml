@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus-ingress
+  namespace: gitlab-managed-apps
+spec:
+  rules:
+  - host: prometheus.eks.eme-devops.com
+    http:
+      paths:
+      - backend:
+          serviceName: prometheus-prometheus-server
+          servicePort: 80

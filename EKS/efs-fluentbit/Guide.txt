@@ -1,0 +1,9 @@
+1. kubectl create namespace fluent-bit-efs
+
+2. Create Service Account
+
+3. Create PV
+
+4. Create pvc
+
+5. https://aws.amazon.com/blogs/storage/persistent-storage-for-container-logging-using-fluent-bit-and-amazon-efs/

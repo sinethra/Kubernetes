@@ -1,0 +1,5 @@
+https://kubernetes.io/blog/2018/07/12/resizing-persistent-volumes-using-kubernetes/
+https://dev.to/7d1/resizing-persistent-volumes-in-eks-aks-gke-3oa7
+
+kubectl patch sc gp2 -p '{"allowVolumeExpansion": true}'
+kubectl patch sc gp2 -p '{"ExpandInUsePersistentVolumes": true}'
